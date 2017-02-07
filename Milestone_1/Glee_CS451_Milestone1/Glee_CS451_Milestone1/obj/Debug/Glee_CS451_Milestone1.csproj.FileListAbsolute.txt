@@ -1,0 +1,16 @@
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\bin\Debug\Glee_CS451_Milestone1.exe.config
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\bin\Debug\Glee_CS451_Milestone1.exe
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\bin\Debug\Glee_CS451_Milestone1.pdb
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\bin\Debug\Npgsql.dll
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\bin\Debug\Npgsql.xml
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.csprojResolveAssemblyReference.cache
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\MainWindow.g.cs
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\App.g.cs
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1_MarkupCompile.cache
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1_MarkupCompile.lref
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\MainWindow.baml
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.g.resources
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.Properties.Resources.resources
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.csproj.GenerateResource.Cache
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.exe
+C:\Users\gene\Documents\Glee_CS451_Milestone1\Glee_CS451_Milestone1\obj\Debug\Glee_CS451_Milestone1.pdb

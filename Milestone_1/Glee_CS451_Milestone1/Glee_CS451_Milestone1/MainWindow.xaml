@@ -1,0 +1,21 @@
+﻿<Window x:Class="Glee_CS451_Milestone1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Glee_CS451_Milestone1"
+        mc:Ignorable="d"
+        Title="Milestone1" Height="535" Width="385"
+        ResizeMode="NoResize">
+    <Grid>
+        <ComboBox x:Name="stateList" HorizontalAlignment="Left" Margin="101,40,0,0" VerticalAlignment="Top" Width="229" SelectionChanged="stateList_SelectionChanged"/>
+        <Label x:Name="stateLabel" Content="State" HorizontalAlignment="Left" Margin="40,39,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="cityLabel" Content="City" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Height="26"/>
+        <ComboBox x:Name="cityList" HorizontalAlignment="Left" Margin="101,80,0,0" VerticalAlignment="Top" Width="229" SelectionChanged="cityList_SelectionChanged"/>
+        <GroupBox x:Name="StateCityGroupBox" Header="State/City" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="109" Width="349" FontSize="14"/>
+        <GroupBox x:Name="BusinessGroupBox" Header="Businesses" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Height="363" Width="349" FontSize="14">
+            <DataGrid x:Name="businessGrid" HorizontalAlignment="Left" Margin="0,10,-1.286,0" VerticalAlignment="Top" Height="324" Width="339" FontSize="12"/>
+        </GroupBox>
+
+    </Grid>
+</Window>
