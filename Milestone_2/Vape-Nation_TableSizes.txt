@@ -1,0 +1,29 @@
+-- Retrieves the number of tuples in each of your tables
+
+SELECT COUNT(*) FROM Business;
+
+-- 51341
+
+SELECT COUNT(*) FROM Users;
+
+-- 141160
+
+SELECT COUNT(*) FROM Checkin;
+
+-- 284298
+
+SELECT COUNT(*) FROM Tip;
+
+-- 524782
+
+SELECT COUNT(*) FROM Friends;
+
+-- 886305
+
+SELECT COUNT(*) FROM Hours;
+
+-- 285451
+
+SELECT COUNT(*) FROM Category;
+
+-- 156085

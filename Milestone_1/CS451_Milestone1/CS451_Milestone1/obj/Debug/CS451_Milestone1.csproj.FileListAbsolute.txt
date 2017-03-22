@@ -1,0 +1,15 @@
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\MainWindow.g.cs
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\App.g.cs
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1_MarkupCompile.cache
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1_MarkupCompile.lref
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\bin\Debug\CS451_Milestone1.exe.config
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\bin\Debug\CS451_Milestone1.exe
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\bin\Debug\CS451_Milestone1.pdb
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\bin\Debug\Npgsql.dll
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\bin\Debug\Npgsql.xml
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\MainWindow.baml
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1.g.resources
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1.Properties.Resources.resources
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1.csproj.GenerateResource.Cache
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1.exe
+D:\Spring17\CS451\Project\Milestone_1\CS451_Milestone1\CS451_Milestone1\obj\Debug\CS451_Milestone1.pdb
