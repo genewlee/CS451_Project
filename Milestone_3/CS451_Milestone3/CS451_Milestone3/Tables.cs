@@ -55,5 +55,7 @@ namespace CS451_Milestone3
 		public string address { get; set; }
 		public int numTips { get; set; }
 		public int totalCheckins { get; set; }
+		public string open { get; set; }
+		public string close { get; set; }
 	}
 }

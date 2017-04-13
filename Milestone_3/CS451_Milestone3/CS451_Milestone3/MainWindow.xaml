@@ -6,8 +6,12 @@
         xmlns:local="clr-namespace:CS451_Milestone3"
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="CS451_Milestone3.MainWindow"
         mc:Ignorable="d"
-        Title="Yelp_Milestone3" Height="726.066" Width="932.29" Background="#FFD6CFCF" ResizeMode="NoResize">
+        Title="Yelp_Milestone3" Height="736.352" Width="960.291" Background="#FF832323" ResizeMode="NoResize">
 	<Grid RenderTransformOrigin="0.5,0.5">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="241*"/>
+			<ColumnDefinition Width="68*"/>
+		</Grid.ColumnDefinitions>
 		<Grid.RenderTransform>
 			<TransformGroup>
 				<ScaleTransform/>
@@ -16,9 +20,9 @@
 				<TranslateTransform/>
 			</TransformGroup>
 		</Grid.RenderTransform>
-		<TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="667" VerticalAlignment="Top" Width="926">
+		<TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="667" VerticalAlignment="Top" Width="926" Grid.ColumnSpan="2" Margin="10,10,0,0">
 			<TabItem x:Name="UserInfoTab" Header="User Information" BorderBrush="#FFE5E5E5">
-				<Grid Background="#FFE5E5E5" Margin="0,-2,-5,-1">
+				<Grid Background="#FFF9F7F7" Margin="0,-2,-5,-1">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="160*"/>
 						<ColumnDefinition Width="137*"/>
@@ -50,9 +54,9 @@
 					<GroupBox x:Name="tipsByFriendsGroupBox" Header="Tips by Friends" HorizontalAlignment="Left" Margin="124,134,0,0" VerticalAlignment="Top" Width="617" Height="498" Grid.ColumnSpan="3" Grid.Column="1">
 						<Label x:Name="tipsByFriendsLabel" Content="Latest tips posted by the user's friends:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
 					</GroupBox>
-					<DataGrid x:Name="tipsByFriendsDataGrid" HorizontalAlignment="Left" Margin="135,175,0,0" VerticalAlignment="Top" Height="447" Width="594" Grid.ColumnSpan="3" FontSize="11" IsReadOnly="True" Grid.Column="1"/>
+					<DataGrid x:Name="tipsByFriendsDataGrid" HorizontalAlignment="Left" Margin="135,175,0,0" VerticalAlignment="Top" Height="447" Width="594" Grid.ColumnSpan="3" FontSize="11" IsReadOnly="True" Grid.Column="1" SelectionMode="Single"/>
 					<GroupBox x:Name="FriendsGroupBox" Header="Friends" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Height="498" Width="269" Grid.ColumnSpan="2">
-						<DataGrid x:Name="friendsDataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="409" Width="238"/>
+						<DataGrid x:Name="friendsDataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="409" Width="238" SelectionMode="Single" IsReadOnly="True"/>
 					</GroupBox>
 					<ComboBox x:Name="rateFriendComboBox" HorizontalAlignment="Left" Margin="142,576,0,0" VerticalAlignment="Top" Width="101" Height="21" Grid.ColumnSpan="2">
 						<System:String>0</System:String>
@@ -68,7 +72,7 @@
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="BusinessSearchTab" Header="Business Search">
-				<Grid Background="#FFE5E5E5" Margin="0,7,0,-7">
+				<Grid Background="#FFF9F7F7" Margin="0,-1,-4.571,-4.714">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="34*"/>
 						<ColumnDefinition Width="563*"/>
@@ -90,7 +94,7 @@
 					<Button x:Name="removeCategoryButton" Content="-" HorizontalAlignment="Left" Margin="26,571,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="2" Click="removeCategoryButton_Click"/>
 					<Button x:Name="searchBusinessButton" Content="Search Business" HorizontalAlignment="Left" Margin="26,609,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="2" Foreground="#FFF7F3F3" Background="#FF646262" Click="searchBusinessButton_Click"/>
 					<GroupBox x:Name="searchResultsgroupBox" Grid.Column="1" Header="SEARCH RESULTS" HorizontalAlignment="Left" Margin="146,86,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="571" Height="417"/>
-					<DataGrid x:Name="searchResultsdataGrid" Grid.Column="1" HorizontalAlignment="Left" Margin="159,110,0,0" VerticalAlignment="Top" Height="384" Width="547" Grid.ColumnSpan="2" FontSize="11"/>
+					<DataGrid x:Name="searchResultsdataGrid" Grid.Column="1" HorizontalAlignment="Left" Margin="159,110,0,0" VerticalAlignment="Top" Height="384" Width="547" Grid.ColumnSpan="2" FontSize="11" SelectionChanged="searchResultsdataGrid_SelectionChanged" SelectionMode="Single" IsReadOnly="True"/>
 					<GroupBox x:Name="openBusinessGroupBox" Grid.Column="1" Header="Open Businesses" HorizontalAlignment="Left" Margin="146,10,0,0" VerticalAlignment="Top" Height="71" Width="571" Grid.ColumnSpan="2">
 						<Label x:Name="timeFromLabel" Content="From:" HorizontalAlignment="Left" Margin="249,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.288,0.924"/>
 					</GroupBox>
@@ -157,10 +161,16 @@
 						<System:String>22:00</System:String>
 						<System:String>23:00</System:String>
 					</ComboBox>
+					<GroupBox x:Name="selectedBusinessGroupBox" Grid.Column="1" Header="Selected Business" HorizontalAlignment="Left" Margin="146.286,503,0,0" VerticalAlignment="Top" Height="127" Width="571" Grid.ColumnSpan="2" IsEnabled="False">
+						<TextBox x:Name="tipTextBox" HorizontalAlignment="Left" Height="66" Margin="10,35,0,0" TextWrapping="Wrap" Text="&lt;&lt;tip text&gt;&gt;" VerticalAlignment="Top" Width="425"/>
+					</GroupBox>
+					<TextBox x:Name="selectedBusinessTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="159.286,525,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="429" Grid.ColumnSpan="2" IsEnabled="False" Background="#FF832323" Foreground="#FFFDFBFB"/>
+					<Button x:Name="checkinButton" Content="Checkin" Grid.Column="2" HorizontalAlignment="Left" Margin="39.571,525,0,0" VerticalAlignment="Top" Width="95" Click="checkinButton_Click" IsEnabled="False"/>
+					<Button x:Name="addTipButton" Content="Add Tip" Grid.Column="2" HorizontalAlignment="Left" Margin="39.571,554,0,0" VerticalAlignment="Top" Width="95" Click="addTipButton_Click" Height="38" IsEnabled="False"/>
 				</Grid>
 			</TabItem>
 		</TabControl>
-		<Label x:Name="byLabel" Content="Gene Lee &amp; Kameron Haramoto | CS451 | Spring 2017 | WSU" HorizontalAlignment="Left" Margin="629,667,0,-10" FontSize="10" Width="287" RenderTransformOrigin="0.519,0.733"/>
+		<Label x:Name="byLabel" Content="Gene Lee &amp; Kameron Haramoto | CS451 | Spring 2017 | WSU" HorizontalAlignment="Left" Margin="649,677,0,-20.286" FontSize="10" Width="287" RenderTransformOrigin="0.519,0.733" Foreground="#FFFCF9F9" Grid.ColumnSpan="2"/>
 
 	</Grid>
 </Window>
