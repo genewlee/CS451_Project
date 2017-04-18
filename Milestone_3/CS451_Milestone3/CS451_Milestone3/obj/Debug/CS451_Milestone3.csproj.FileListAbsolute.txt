@@ -30,3 +30,11 @@ D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debu
 D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\CS451_Milestone3.g.resources
 D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\CS451_Milestone3.Properties.Resources.resources
 D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\CS451_Milestone3.csproj.GenerateResource.Cache
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\BusinessTips.g.cs
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\BusinessTips.baml
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\bin\Debug\system.windows.controls.datavisualization.toolkit.dll
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\bin\Debug\WPFToolkit.dll
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\bin\Debug\system.windows.controls.datavisualization.toolkit.pdb
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\bin\Debug\WPFToolkit.pdb
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\CategoryStats.g.cs
+D:\Spring17\CS451\Project\Milestone_3\CS451_Milestone3\CS451_Milestone3\obj\Debug\CategoryStats.baml

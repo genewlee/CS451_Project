@@ -51,12 +51,10 @@
 					<TextBox x:Name="userInfoVotesCoolTextBox" HorizontalAlignment="Left" Height="23" Margin="324,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" RenderTransformOrigin="0.998,-0.094" IsEnabled="False" Grid.Column="3"/>
 					<TextBox x:Name="userInfoVotesUsefulTextBox" HorizontalAlignment="Left" Height="23" Margin="446,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="63" RenderTransformOrigin="0.998,-0.094" IsEnabled="False" Grid.Column="3"/>
 					<TextBox x:Name="userInfoYelpingSinceTextBox" HorizontalAlignment="Left" Height="23" Margin="222,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="146" IsEnabled="False" Grid.Column="3"/>
-					<GroupBox x:Name="tipsByFriendsGroupBox" Header="Tips by Friends" HorizontalAlignment="Left" Margin="124,134,0,0" VerticalAlignment="Top" Width="617" Height="498" Grid.ColumnSpan="3" Grid.Column="1">
-						<Label x:Name="tipsByFriendsLabel" Content="Latest tips posted by the user's friends:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
-					</GroupBox>
+					<GroupBox x:Name="tipsByFriendsGroupBox" Header="Tips by Friends" HorizontalAlignment="Left" Margin="124,134,0,0" VerticalAlignment="Top" Width="617" Height="498" Grid.ColumnSpan="3" Grid.Column="1"/>
 					<DataGrid x:Name="tipsByFriendsDataGrid" HorizontalAlignment="Left" Margin="135,175,0,0" VerticalAlignment="Top" Height="447" Width="594" Grid.ColumnSpan="3" FontSize="11" IsReadOnly="True" Grid.Column="1" SelectionMode="Single"/>
 					<GroupBox x:Name="FriendsGroupBox" Header="Friends" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" Height="498" Width="269" Grid.ColumnSpan="2">
-						<DataGrid x:Name="friendsDataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="409" Width="238" SelectionMode="Single" IsReadOnly="True"/>
+						<DataGrid x:Name="friendsDataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="409" Width="238" SelectionMode="Single" IsReadOnly="True" MouseUp="friendsDataGrid_MouseUp"/>
 					</GroupBox>
 					<ComboBox x:Name="rateFriendComboBox" HorizontalAlignment="Left" Margin="142,576,0,0" VerticalAlignment="Top" Width="101" Height="21" Grid.ColumnSpan="2">
 						<System:String>0</System:String>
@@ -69,14 +67,17 @@
 					<Button x:Name="friendsRateButton" Content="Rate Friend" HorizontalAlignment="Left" Margin="27,577,0,0" VerticalAlignment="Top" Width="94" Click="friendsRateButton_Click"/>
 					<Button x:Name="friendsRemoveButton" Content="Remove Friend" HorizontalAlignment="Left" Margin="27,602,0,0" VerticalAlignment="Top" Width="94" Click="friendsRemoveButton_Click"/>
 					<Label x:Name="friendsValidLabel" Content="Error" HorizontalAlignment="Left" Margin="142,596,0,0" VerticalAlignment="Top" Width="126" Foreground="#FFFD0707" Grid.ColumnSpan="2"/>
+					<Label x:Name="tipsByFriendsLabel" Content="Latest tips posted by the users friends:" Grid.Column="1" HorizontalAlignment="Left" Margin="137,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Width="215"/>
+					<Button x:Name="allTipsButton" Content="Show all tips" Grid.Column="3" HorizontalAlignment="Left" Margin="427.714,152,0,0" VerticalAlignment="Top" Width="79" Click="allTipsButton_Click"/>
+					<Button x:Name="friendTipsButton" Content="Show tips from selected friend" HorizontalAlignment="Left" Margin="244.714,152,0,0" VerticalAlignment="Top" Width="178" Click="friendTipsButton_Click" Grid.Column="3"/>
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="BusinessSearchTab" Header="Business Search">
-				<Grid Background="#FFF9F7F7" Margin="0,-1,-4.571,-4.714">
+				<Grid Background="#FFF9F7F7" Margin="10,-3,-14.571,-2.571">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="34*"/>
-						<ColumnDefinition Width="563*"/>
-						<ColumnDefinition Width="323*"/>
+						<ColumnDefinition Width="34.286"/>
+						<ColumnDefinition Width="283*"/>
+						<ColumnDefinition Width="162*"/>
 					</Grid.ColumnDefinitions>
 					<GroupBox x:Name="selectLocationGroupBox" Header="Select Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="242" Width="170" Grid.ColumnSpan="2">
 						<ListBox x:Name="cityListBox" HorizontalAlignment="Left" Height="64" Margin="10,57,0,0" VerticalAlignment="Top" Width="141" FontSize="11" SelectionChanged="cityListBox_SelectionChanged"/>
@@ -96,10 +97,10 @@
 					<GroupBox x:Name="searchResultsgroupBox" Grid.Column="1" Header="SEARCH RESULTS" HorizontalAlignment="Left" Margin="146,86,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="571" Height="417"/>
 					<DataGrid x:Name="searchResultsdataGrid" Grid.Column="1" HorizontalAlignment="Left" Margin="159,110,0,0" VerticalAlignment="Top" Height="384" Width="547" Grid.ColumnSpan="2" FontSize="11" SelectionChanged="searchResultsdataGrid_SelectionChanged" SelectionMode="Single" IsReadOnly="True"/>
 					<GroupBox x:Name="openBusinessGroupBox" Grid.Column="1" Header="Open Businesses" HorizontalAlignment="Left" Margin="146,10,0,0" VerticalAlignment="Top" Height="71" Width="571" Grid.ColumnSpan="2">
-						<Label x:Name="timeFromLabel" Content="From:" HorizontalAlignment="Left" Margin="249,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.288,0.924"/>
+						<Label x:Name="timeFromLabel" Content="From:" HorizontalAlignment="Left" Margin="258,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.288,0.924"/>
 					</GroupBox>
-					<Label x:Name="dayOfWeekLabel" Content="Day of Week:" Grid.Column="1" HorizontalAlignment="Left" Margin="169,37,0,0" VerticalAlignment="Top"/>
-					<ComboBox x:Name="dayOfWeekComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="263,41,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="dayOfWeekComboBox_SelectionChanged">
+					<Label x:Name="dayOfWeekLabel" Content="Day of Week:" Grid.Column="1" HorizontalAlignment="Left" Margin="179.714,37,0,0" VerticalAlignment="Top"/>
+					<ComboBox x:Name="dayOfWeekComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="264.714,41,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="dayOfWeekComboBox_SelectionChanged">
 						<System:String>Sunday</System:String>
 						<System:String>Monday</System:String>
 						<System:String>Tuesday</System:String>
@@ -108,9 +109,8 @@
 						<System:String>Friday</System:String>
 						<System:String>Saturday</System:String>
 					</ComboBox>
-					<Label x:Name="timeToLabel" Content="To:" Grid.Column="2" HorizontalAlignment="Left" Margin="0,37,0,0" VerticalAlignment="Top"/>
-					<ComboBox x:Name="timeFromComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="458,41,0,0" VerticalAlignment="Top" Width="95" SelectionChanged="timeFromComboBox_SelectionChanged">
-						<System:String>00:00</System:String>
+					<Label x:Name="timeToLabel" Content="To:" Grid.Column="1" HorizontalAlignment="Left" Margin="425.714,50,0,0" VerticalAlignment="Top"/>
+					<ComboBox x:Name="timeFromComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="470.714,29,0,0" VerticalAlignment="Top" Width="95" SelectionChanged="timeFromComboBox_SelectionChanged">
 						<System:String>01:00</System:String>
 						<System:String>02:00</System:String>
 						<System:String>03:00</System:String>
@@ -135,8 +135,7 @@
 						<System:String>22:00</System:String>
 						<System:String>23:00</System:String>
 					</ComboBox>
-					<ComboBox x:Name="timeToComboBox" Grid.Column="2" HorizontalAlignment="Left" Margin="40,41,0,0" VerticalAlignment="Top" Width="95" SelectionChanged="timeToComboBox_SelectionChanged">
-						<System:String>00:00</System:String>
+					<ComboBox x:Name="timeToComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="470.714,55,0,0" VerticalAlignment="Top" Width="95" SelectionChanged="timeToComboBox_SelectionChanged">
 						<System:String>01:00</System:String>
 						<System:String>02:00</System:String>
 						<System:String>03:00</System:String>
@@ -160,6 +159,7 @@
 						<System:String>21:00</System:String>
 						<System:String>22:00</System:String>
 						<System:String>23:00</System:String>
+						<System:String>23:59</System:String>
 					</ComboBox>
 					<GroupBox x:Name="selectedBusinessGroupBox" Grid.Column="1" Header="Selected Business" HorizontalAlignment="Left" Margin="146.286,503,0,0" VerticalAlignment="Top" Height="127" Width="571" Grid.ColumnSpan="2" IsEnabled="False">
 						<TextBox x:Name="tipTextBox" HorizontalAlignment="Left" Height="66" Margin="10,35,0,0" TextWrapping="Wrap" Text="&lt;&lt;tip text&gt;&gt;" VerticalAlignment="Top" Width="425"/>
@@ -167,6 +167,14 @@
 					<TextBox x:Name="selectedBusinessTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="21" Margin="159.286,525,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="429" Grid.ColumnSpan="2" IsEnabled="False" Background="#FF832323" Foreground="#FFFDFBFB"/>
 					<Button x:Name="checkinButton" Content="Checkin" Grid.Column="2" HorizontalAlignment="Left" Margin="39.571,525,0,0" VerticalAlignment="Top" Width="95" Click="checkinButton_Click" IsEnabled="False"/>
 					<Button x:Name="addTipButton" Content="Add Tip" Grid.Column="2" HorizontalAlignment="Left" Margin="39.571,554,0,0" VerticalAlignment="Top" Width="95" Click="addTipButton_Click" Height="38" IsEnabled="False"/>
+					<Label x:Name="checkinTipSuccessLabel" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="39.571,597,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.351,0.51" Width="95"/>
+					<GroupBox x:Name="BusinessDetailsGroupBox" Grid.Column="2" Header="Business Details" HorizontalAlignment="Left" Margin="156,86,0,0" VerticalAlignment="Top" Height="103" Width="158"/>
+					<GroupBox x:Name="CategoryStatsGoupBox" Grid.Column="2" Header="Category Stats" HorizontalAlignment="Left" Margin="156,194,0,0" VerticalAlignment="Top" Height="106" Width="158"/>
+					<Button x:Name="showCheckinsButton" Content="Show Checkins" HorizontalAlignment="Left" Margin="166,110,0,0" Width="139" Height="31" VerticalAlignment="Top" Grid.Column="2" Background="#FF832323" Foreground="White" Click="showCheckinsButton_Click" IsEnabled="False"/>
+					<Button x:Name="showTipsButton" Content="Show Tips" HorizontalAlignment="Left" Margin="166,148,0,0" Width="139" Height="31" VerticalAlignment="Top" Grid.Column="2" Background="#FF832323" Foreground="White" Click="showTipsButton_Click" IsEnabled="False"/>
+					<Button x:Name="numBusinessperCatButton" Content="# of Business per Category" HorizontalAlignment="Left" Margin="166,221,0,0" Width="139" Height="31" VerticalAlignment="Top" Grid.Column="2" FontSize="11" Background="#FF832323" Foreground="White" Click="numBusinessperCatButton_Click" IsEnabled="False"/>
+					<Button x:Name="avgStarsPerCatButton" Content="Avg Stars per Category" HorizontalAlignment="Left" Margin="166,257,0,0" Width="139" Height="31" VerticalAlignment="Top" Grid.Column="2" Background="#FF832323" Foreground="White" Click="avgStarsPerCatButton_Click" IsEnabled="False"/>
+					<Button x:Name="show24HoursButton" Content="Open 24 Hours" Grid.Column="2" HorizontalAlignment="Left" Margin="27,41,0,0" VerticalAlignment="Top" Width="108" Height="23" Click="show24HoursButton_Click"/>
 				</Grid>
 			</TabItem>
 		</TabControl>

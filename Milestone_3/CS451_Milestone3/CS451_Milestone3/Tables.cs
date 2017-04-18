@@ -25,13 +25,14 @@ namespace CS451_Milestone3
 		}
 	}
 
-	public class FriendsTipDataItem
+	public class TipDataItem
 	{
 		public string name { get; set; }
 		public string bname { get; set; }
 		public string bcity { get; set; }
 		public string text { get; set; }
 		public string date { get; set; }
+		public int likes { get; set; }
 	}
 
 	public class Location
@@ -53,6 +54,9 @@ namespace CS451_Milestone3
 		public string bid { get; set; }
 		public string name { get; set; }
 		public string address { get; set; }
+		public string city { get; set; }
+		public string state { get; set; }
+		public string zipcode { get; set; }
 		public int numTips { get; set; }
 		public int totalCheckins { get; set; }
 		public string open { get; set; }

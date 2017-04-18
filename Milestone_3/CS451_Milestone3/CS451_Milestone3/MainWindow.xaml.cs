@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Timers;
 using Npgsql;
 using CS451_Milestone3;
 
@@ -133,7 +134,7 @@ namespace CS451_Milestone3
 							string text = reader.GetString(3);
 							string date = reader.GetString(4);
 							//Console.WriteLine(String.Format("{0}, {1}, {2}, {3}, {4}", name, bname, bcity, text, date));
-							tipsByFriendsDataGrid.Items.Add(new FriendsTipDataItem { name = name, bname = bname, bcity = bcity, text = text, date = date });
+							tipsByFriendsDataGrid.Items.Add(new TipDataItem { name = name, bname = bname, bcity = bcity, text = text, date = date });
 						}
 						setUserInfo();
 					}
@@ -294,6 +295,73 @@ namespace CS451_Milestone3
 		}
 
 		/// <summary>
+		/// When a friend is selected, only show tips made from this friend
+		/// </summary>
+		private void friendTipsButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (friendsDataGrid.SelectedIndex != -1)
+			{
+				tipsByFriendsDataGrid.Items.Clear();
+				tipsByFriendsDataGrid.Columns.Clear();
+				initColumnsToTipByFriendsGrid();
+				using (var conn = new NpgsqlConnection(connectString))
+				{
+					conn.Open();
+					using (var cmd = new NpgsqlCommand())
+					{
+						var friend = friendsDataGrid.SelectedItem as User;
+
+						cmd.Connection = conn;
+						// Retrieve all rows
+						cmd.CommandText = String.Format(@"SELECT F.name, Business.name, Business.city, Tip.text, Tip.Date 
+																						FROM(
+																									SELECT uid, name
+																									FROM Users
+																									WHERE uid = '{0}'
+																								) AS F, Tip, Business
+																									WHERE F.uid = Tip.uid AND Tip.bid = Business.bid
+																								ORDER BY Tip.Date DESC; ", friend.uid);
+						using (var reader = cmd.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								string name = reader.GetString(0);
+								string bname = reader.GetString(1);
+								string bcity = reader.GetString(2);
+								string text = reader.GetString(3);
+								string date = reader.GetString(4);
+								tipsByFriendsDataGrid.Items.Add(new TipDataItem { name = name, bname = bname, bcity = bcity, text = text, date = date });
+							}
+							setUserInfo();
+						}
+					}
+					conn.Close();
+				}
+			}
+			else // friend was selected from the list
+			{
+				friendsValidLabel.Content = "Select a friend";
+				friendsValidLabel.Visibility = Visibility.Visible;
+			}
+		}
+
+		/// <summary>
+		/// Don't show this error message when a selection is made in friends data grid
+		/// </summary>
+		private void friendsDataGrid_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+			friendsValidLabel.Visibility = Visibility.Hidden;
+		}
+
+		/// <summary>
+		/// When show all tips button is clicked, show default - tips of all friends
+		/// </summary>
+		private void allTipsButton_Click(object sender, RoutedEventArgs e)
+		{
+			displayTipsByFriends();
+		}
+
+		/// <summary>
 		/// Initializes the column headers in Friends grid
 		/// </summary>
 		private void initColumnsToFriendsGrid()
@@ -317,8 +385,6 @@ namespace CS451_Milestone3
 			col3.Width = 83;
 			friendsDataGrid.Columns.Add(col3);
 		}
-
-
 	}
 
 	/// <summary>
@@ -354,6 +420,7 @@ namespace CS451_Milestone3
 			timeFromComboBox.SelectedIndex = -1;
 			timeToComboBox.IsEnabled = false;
 			timeToComboBox.SelectedIndex = -1;
+			show24HoursButton.IsEnabled = false;
 		}
 
 		/// <summary>
@@ -395,6 +462,10 @@ namespace CS451_Milestone3
 
 			// disable search for business button
 			searchBusinessButton.IsEnabled = false;
+
+			// enable the numBusinessperCatButton and avgStarsPerCatButton
+			numBusinessperCatButton.IsEnabled = true;
+			avgStarsPerCatButton.IsEnabled = true;
 
 			m_loc.clear();  // clear the location object
 			m_loc.state = stateComboBox.SelectedItem.ToString();
@@ -455,7 +526,7 @@ namespace CS451_Milestone3
 					cmd.CommandText = String.Format(@"SELECT DISTINCT(category.name)
 																						FROM business, category
 																						WHERE business.bid = category.bid 
-																						AND state ='{0}' AND city = '{1}';", m_loc.state, m_loc.city);
+																						AND state ='{0}' AND city = '{1}'  ORDER BY category.name;", m_loc.state, m_loc.city);
 					using (var reader = cmd.ExecuteReader())
 					{
 						while (reader.Read())
@@ -492,14 +563,14 @@ namespace CS451_Milestone3
 						cmd.CommandText = String.Format(@"SELECT DISTINCT(category.name)
 																						FROM business, category
 																						WHERE business.bid = category.bid 
-																						AND state ='{0}' AND city = '{1}' AND zipcode = '{2}';", m_loc.state, m_loc.city, m_loc.zipcode);
+																						AND state ='{0}' AND city = '{1}' AND zipcode = '{2}' ORDER BY category.name;", m_loc.state, m_loc.city, m_loc.zipcode);
 					}
 					else
 					{
 						cmd.CommandText = String.Format(@"SELECT DISTINCT(category.name)
 																						FROM business, category
 																						WHERE business.bid = category.bid 
-																						AND state ='{0}' AND zipcode = '{1}';", m_loc.state, m_loc.zipcode);
+																						AND state ='{0}' AND zipcode = '{1}' ORDER BY category.name;", m_loc.state, m_loc.zipcode);
 					}
 					using (var reader = cmd.ExecuteReader())
 					{
@@ -594,18 +665,21 @@ namespace CS451_Milestone3
 								string bid = reader.GetString(0);
 								string name = reader.GetString(1);
 								string address = reader.GetString(2);
-								int reviewCount = reader.GetInt32(3);
+								string city = reader.GetString(3);
+								string state = reader.GetString(4);
+								string zipcode = reader.GetString(5);
+								int reviewCount = reader.GetInt32(6);
 								// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
 								int numCheckins;
 								try
 								{
-									numCheckins = reader.GetInt32(4);
+									numCheckins = reader.GetInt32(7);
 								}
 								catch
 								{
 									numCheckins = 0;
 								}
-								searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, totalCheckins = numCheckins, numTips = reviewCount});
+								searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount});
 							}
 						}
 					}
@@ -623,6 +697,7 @@ namespace CS451_Milestone3
 			timeFromComboBox.IsEnabled = true;
 			timeFromComboBox.SelectedIndex = -1;
 			timeToComboBox.SelectedIndex = -1;
+			show24HoursButton.IsEnabled = true;
 
 			using (var conn = new NpgsqlConnection(connectString))
 			{
@@ -638,18 +713,23 @@ namespace CS451_Milestone3
 							string bid = reader.GetString(0);
 							string name = reader.GetString(1);
 							string address = reader.GetString(2);
-							int reviewCount = reader.GetInt32(3);
+							string city = reader.GetString(3);
+							string state = reader.GetString(4);
+							string zipcode = reader.GetString(5);
+							int reviewCount = reader.GetInt32(6);
 							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
 							int numCheckins;
 							try
 							{
-								numCheckins = reader.GetInt32(4);
+								numCheckins = reader.GetInt32(7);
 							}
 							catch
 							{
 								numCheckins = 0;
 							}
-							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, totalCheckins = numCheckins, numTips = reviewCount });
+							string open = reader.GetString(8);
+							string close = reader.GetString(9);
+							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
 						}
 					}
 				}
@@ -674,7 +754,6 @@ namespace CS451_Milestone3
 				using (var cmd = new NpgsqlCommand())
 				{
 					cmd.Connection = conn;
-					// TODO: FIGURE OUT HOW TO HANDLE FROM:'00:00' AND TO:'00:00'
 					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' 
 																																					AND H.open<='{1}' AND H.close>'{2}'",
 																																					dayOfWeekComboBox.SelectedItem, timeFromComboBox.SelectedItem, timeFromComboBox.SelectedItem));
@@ -685,20 +764,23 @@ namespace CS451_Milestone3
 							string bid = reader.GetString(0);
 							string name = reader.GetString(1);
 							string address = reader.GetString(2);
-							int reviewCount = reader.GetInt32(3);
+							string city = reader.GetString(3);
+							string state = reader.GetString(4);
+							string zipcode = reader.GetString(5);
+							int reviewCount = reader.GetInt32(6);
 							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
 							int numCheckins;
 							try
 							{
-								numCheckins = reader.GetInt32(4);
+								numCheckins = reader.GetInt32(7);
 							}
 							catch
 							{
 								numCheckins = 0;
 							}
-							string open = reader.GetString(5);
-							string close = reader.GetString(6);
-							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
+							string open = reader.GetString(8);
+							string close = reader.GetString(9);
+							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
 						}
 					}
 				}
@@ -719,7 +801,6 @@ namespace CS451_Milestone3
 				using (var cmd = new NpgsqlCommand())
 				{
 					cmd.Connection = conn;
-					// TODO: FIGURE OUT HOW TO HANDLE FROM:'00:00' AND TO:'00:00'
 					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' 
 																																					AND H.open<='{1}' AND '{2}'<H.close
 																																					AND H.open<='{3}' AND '{4}'<=H.close", 
@@ -731,20 +812,67 @@ namespace CS451_Milestone3
 							string bid = reader.GetString(0);
 							string name = reader.GetString(1);
 							string address = reader.GetString(2);
-							int reviewCount = reader.GetInt32(3);
+							string city = reader.GetString(3);
+							string state = reader.GetString(4);
+							string zipcode = reader.GetString(5);
+							int reviewCount = reader.GetInt32(6);
 							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
 							int numCheckins;
 							try
 							{
-								numCheckins = reader.GetInt32(4);
+								numCheckins = reader.GetInt32(7);
 							}
 							catch
 							{
 								numCheckins = 0;
 							}
-							string open = reader.GetString(5);
-							string close = reader.GetString(6);
-							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close});
+							string open = reader.GetString(8);
+							string close = reader.GetString(9);
+							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
+						}
+					}
+				}
+				conn.Close();
+			}
+		}
+
+		private void show24HoursButton_Click(object sender, RoutedEventArgs e)
+		{
+			searchResultsdataGrid.Items.Clear();
+			timeFromComboBox.SelectedIndex = -1;
+			timeToComboBox.SelectedIndex = -1;
+
+			using (var conn = new NpgsqlConnection(connectString))
+			{
+				conn.Open();
+				using (var cmd = new NpgsqlCommand())
+				{
+					cmd.Connection = conn;
+					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' AND H.open='00:00' AND '00:00'=H.close", dayOfWeekComboBox.SelectedItem));
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							string bid = reader.GetString(0);
+							string name = reader.GetString(1);
+							string address = reader.GetString(2);
+							string city = reader.GetString(3);
+							string state = reader.GetString(4);
+							string zipcode = reader.GetString(5);
+							int reviewCount = reader.GetInt32(6);
+							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
+							int numCheckins;
+							try
+							{
+								numCheckins = reader.GetInt32(7);
+							}
+							catch
+							{
+								numCheckins = 0;
+							}
+							string open = reader.GetString(8);
+							string close = reader.GetString(9);
+							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
 						}
 					}
 				}
@@ -764,13 +892,14 @@ namespace CS451_Milestone3
 
 			if (queryToAppend == "") // There is no filtering of date/time
 			{
-				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.review_count, B.numcheckins 
+				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins 
 																					FROM business as B, category as C
 																					WHERE B.bid = C.bid AND state='{0}' ", m_loc.state));
 			}
-			else // passed in filter for date/time
+			else
 			{
-				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.review_count, B.numcheckins, H.open, H.close
+				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins,
+																					H.open, H.close
 																					FROM business as B, category as C, hours H
 																					WHERE B.bid = C.bid AND B.bid = H.bid
 																					AND state='{0}' ", m_loc.state));
@@ -812,7 +941,18 @@ namespace CS451_Milestone3
 		private void searchResultsdataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			m_biz = searchResultsdataGrid.SelectedItem as Business; // set the selected business as the member variable business object
-			selectedBusinessTextBox.Text = m_biz.name;
+			if (m_biz != null) // only set the selected business when selection is made not when the data grid refreshes also
+			{
+				selectedBusinessTextBox.Text = m_biz.name;
+				showTipsButton.IsEnabled = true;
+				showCheckinsButton.IsEnabled = true;
+			}
+			else // reset
+			{
+				selectedBusinessTextBox.Text = null;
+				showTipsButton.IsEnabled = false;
+				showCheckinsButton.IsEnabled = false;
+			}
 		}
 
 		/// <summary>
@@ -821,8 +961,70 @@ namespace CS451_Milestone3
 		/// </summary>
 		private void checkinButton_Click(object sender, RoutedEventArgs e)
 		{
-			// TODO: Get business 'm_biz.bid' and update the checkin table
-			// TODO: update depending on current time of day and day of week
+			if (selectedBusinessTextBox.Text != "")
+			{
+				using (var conn = new NpgsqlConnection(connectString))
+				{
+					conn.Open();
+					using (var cmd = new NpgsqlCommand())
+					{
+						DateTime dt = DateTime.Now;
+						String dayOfWeek = dt.DayOfWeek.ToString();
+						int hour = dt.Hour;
+
+						String checkinTime = "";
+						if (6 <= hour && hour < 12)
+							checkinTime = "num_morning = num_morning + 1";
+						else if (12 <= hour && hour < 17)
+							checkinTime = "num_afternoon = num_afternoon + 1";
+						else if (17 <= hour && hour < 23)
+							checkinTime = "num_evening = num_evening + 1";
+						else
+							checkinTime = "num_night = num_night + 1";
+
+						cmd.Connection = conn;
+
+						// Execute the checkin query
+						cmd.CommandText = String.Format(@"UPDATE checkin 
+																						SET {0} 
+																					  WHERE bid ='{1}' and day='{2}';", checkinTime, m_biz.bid, dayOfWeek);
+						int rowsAffected = cmd.ExecuteNonQuery();
+
+						if (rowsAffected > 0)
+						{
+							checkinTipSuccessLabel.Foreground = Brushes.Black;
+							checkinTipSuccessLabel.Content = "Checked In!";
+						}
+						else
+						{
+							checkinTipSuccessLabel.Foreground = Brushes.Red;
+							checkinTipSuccessLabel.Content = "Error";
+						}
+					}
+					conn.Close();
+				}
+			}
+			else
+			{
+				checkinTipSuccessLabel.Foreground = Brushes.Red;
+				checkinTipSuccessLabel.Content = "Select a business";
+			}
+			// Set a timer to display and remove the success label
+			Timer timer = new Timer(5000);
+			timer.Elapsed += new ElapsedEventHandler(clear_checkinTipSuccessLabel);
+			timer.Enabled = true;
+		}
+
+		/// <summary>
+		/// Clears the checkin/tip success label
+		/// </summary>
+		private void clear_checkinTipSuccessLabel(object source, ElapsedEventArgs e)
+		{
+			// Change UI component in UI thread
+			Dispatcher.Invoke(() =>
+			{
+				checkinTipSuccessLabel.Content = "";
+			});
 		}
 
 		/// <summary>
@@ -831,10 +1033,98 @@ namespace CS451_Milestone3
 		/// </summary>
 		private void addTipButton_Click(object sender, RoutedEventArgs e)
 		{
-			// TODO: Insert into tip with user id 'm_user.uid' and business id 'm_biz.bid' from the tipTextBox.text 
-			//			 Also, will need the current date as 'YYYY-MM-DD'
+			if (selectedBusinessTextBox.Text != "")
+			{
+				using (var conn = new NpgsqlConnection(connectString))
+				{
+					conn.Open();
+					using (var cmd = new NpgsqlCommand())
+					{
+						DateTime dt = DateTime.Now;
+						String date = dt.ToString("yyyy-MM-dd");
+
+						cmd.Connection = conn;
+
+						// Execute the tip query
+						cmd.CommandText = String.Format(@"INSERT INTO tip(uid,bid,text,likes,date) VALUES ('{0}','{1}', '{2}', 0,'{3}');", m_user.uid, m_biz.bid, tipTextBox.Text, date);
+
+						int rowsAffected = cmd.ExecuteNonQuery();
+
+						if (rowsAffected > 0)
+						{
+							checkinTipSuccessLabel.Foreground = Brushes.Black;
+							checkinTipSuccessLabel.Content = "Added Tip!";
+						}
+						else
+						{
+							checkinTipSuccessLabel.Foreground = Brushes.Red;
+							checkinTipSuccessLabel.Content = "Error";
+						}
+					}
+					conn.Close();
+				}
+			}
+			else
+			{
+				checkinTipSuccessLabel.Foreground = Brushes.Red;
+				checkinTipSuccessLabel.Content = "Select a business";
+			}
+			// Set a timer to display and remove the success label
+			Timer timer = new Timer(5000);
+			timer.Elapsed += new ElapsedEventHandler(clear_checkinTipSuccessLabel);
+			timer.Enabled = true;
 		}
 
+		/// <summary>
+		/// Creates a graph with checkins for that business
+		/// </summary>
+		private void showCheckinsButton_Click(object sender, RoutedEventArgs e)
+		{
+			// TODO
+		}
+
+		/// <summary>
+		/// Creates a graph that shows with tips provided for the selected business
+		/// </summary>
+		private void showTipsButton_Click(object sender, RoutedEventArgs e)
+		{
+			BusinessTips win = new BusinessTips(connectString, m_biz);
+			win.Show();
+		}
+
+		/// <summary>
+		/// Creates a graph that shows number of business per category for the businesses
+		/// </summary>
+		private void numBusinessperCatButton_Click(object sender, RoutedEventArgs e)
+		{
+			string state = "", city = "", zip = "";
+			if (stateComboBox.SelectedIndex != -1)
+				state = stateComboBox.SelectedItem.ToString();
+			if (cityListBox.SelectedIndex != -1)
+				city = cityListBox.SelectedItem.ToString();
+			if (zipcodeListBox.SelectedIndex != -1)
+				zip = zipcodeListBox.SelectedItem.ToString();
+
+			CategoryStats win = new CategoryStats(connectString, state, city, zip, false);
+			win.Show();
+		}
+
+		/// <summary>
+		/// Creates a graph that shows average number of star ratings per category
+		/// </summary>
+		private void avgStarsPerCatButton_Click(object sender, RoutedEventArgs e)
+		{
+			string state = "", city = "", zip = "";
+			if (stateComboBox.SelectedIndex != -1)
+				state = stateComboBox.SelectedItem.ToString();
+			if (cityListBox.SelectedIndex != -1)
+				city = cityListBox.SelectedItem.ToString();
+			if (zipcodeListBox.SelectedIndex != -1)
+				zip = zipcodeListBox.SelectedItem.ToString();
+
+			CategoryStats win = new CategoryStats(connectString, state, city, zip, true);
+			win.Show();
+		}
 
 		/// <summary>
 		/// Initializes the column headers in SearchResults grid
