@@ -22,6 +22,7 @@ namespace CS451_Milestone3
 	{
 		private string connectString;
 		private string m_state, m_city, m_zipcode;
+		private Business m_biz;
 
 		public CategoryStats()
 		{
@@ -40,6 +41,95 @@ namespace CS451_Milestone3
 				showGraphForBusinessPerCat();
 			else
 				showGraphForAvgStars();
+		}
+
+		//overload
+		public CategoryStats(string dbConnectString, Business new_Biz)
+		{
+			InitializeComponent();
+			connectString = dbConnectString;
+			m_biz = new_Biz;
+
+			showGraphForBizCheckins();
+		}
+
+		private void showGraphForBizCheckins()
+		{
+      catChart.Title = "Number of Checkins Each Day for " + m_biz.name;
+			colSeries.Title = "# of Checkins";
+
+			List<KeyValuePair<string, int>> data = new List<KeyValuePair<string, int>>();
+
+			using (var conn = new NpgsqlConnection(connectString))
+			{
+				conn.Open();
+				using (var cmd = new NpgsqlCommand())
+				{
+					cmd.Connection = conn;
+
+					// Execute the tip query
+					cmd.CommandText = String.Format(@"SELECT day, num_morning+num_afternoon+num_evening+num_night
+																						FROM checkin
+																						WHERE bid='{0}' ", m_biz.bid);
+
+					using (var reader = cmd.ExecuteReader())
+					{
+						var dayArr = new string[7];
+						var countArr = new int[7];
+						while (reader.Read())
+						{
+							string day = reader.GetString(0);
+							int count = reader.GetInt32(1);
+							if(day == "Sunday")
+							{
+								dayArr[0] = day;
+								countArr[0] = count;
+							}
+							else if (day == "Monday")
+							{
+								dayArr[1] = day;
+								countArr[1] = count;
+							}
+							else if (day == "Tuesday")
+							{
+								dayArr[2] = day;
+								countArr[2] = count;
+              }
+							else if (day == "Wednesday")
+							{
+								dayArr[3] = day;
+								countArr[3] = count;
+              }
+							else if (day == "Thursday")
+							{
+								dayArr[4] = day;
+								countArr[4] = count;
+              }
+							else if (day == "Friday")
+							{
+								dayArr[5] = day;
+								countArr[5] = count;
+              }
+							else if (day == "Saturday")
+							{
+								dayArr[6] = day;
+								countArr[6] = count;
+              }
+							//data.Add(new KeyValuePair<string, int>(day, count));
+						}
+						for(int i = 0; i < 7; i++)
+						{
+							if(dayArr[i] != null)
+							{
+								data.Add(new KeyValuePair<string, int>(dayArr[i], countArr[i]));
+							}
+						}
+					}
+				}
+				conn.Close();
+			}
+			catChart.Width = data.Count * 20; // set the width so that chart is scrollable
+			catChart.DataContext = data;
 		}
 
 		private void showGraphForBusinessPerCat()

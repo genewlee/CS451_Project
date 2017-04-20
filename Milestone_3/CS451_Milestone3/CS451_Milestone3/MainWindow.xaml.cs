@@ -24,7 +24,7 @@ namespace CS451_Milestone3
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private string connectString = "Host=127.0.0.1;Username=postgres;password=1234;Database=Milestone2DB";
+		private string connectString = "Host=127.0.0.1;Username=postgres;password=K@m3r0n4;Database=Milestone2DB";
 		private User m_user;
 
 		public MainWindow()
@@ -1081,6 +1081,8 @@ namespace CS451_Milestone3
 		private void showCheckinsButton_Click(object sender, RoutedEventArgs e)
 		{
 			// TODO
+			CategoryStats win = new CategoryStats(connectString, m_biz);
+			win.Show();
 		}
 
 		/// <summary>

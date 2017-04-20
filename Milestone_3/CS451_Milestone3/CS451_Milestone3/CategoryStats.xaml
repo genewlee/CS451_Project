@@ -9,7 +9,7 @@
         Title="Number of Business Per Category" Height="534.857" Width="1072.117" ResizeMode="NoResize" Background="#FF832323">
 
 	<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-		<chartingToolkit:Chart Name="catChart" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinHeight="300" MinWidth="1050" Height="500" BorderBrush="{x:Null}" Foreground="#FFDCC9C9" >
+    <chartingToolkit:Chart Name="catChart" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinHeight="300" MinWidth="1050" Height="500" BorderBrush="{x:Null}" Foreground="Black">
 				<!--<chartingToolkit:Chart.DataContext>
 					<PointCollection>1,10 2,20 3,30 4,40</PointCollection>
 				</chartingToolkit:Chart.DataContext>-->
