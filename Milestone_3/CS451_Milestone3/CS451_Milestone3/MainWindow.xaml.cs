@@ -24,7 +24,8 @@ namespace CS451_Milestone3
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private string connectString = "Host=127.0.0.1;Username=postgres;password=K@m3r0n4;Database=Milestone2DB";
+		//private string connectString = "Host=127.0.0.1;Username=postgres;password=K@m3r0n4;Database=Milestone2DB";
+		private string connectString = "Host=127.0.0.1;Username=postgres;password=1234;Database=Milestone2DB";
 		private User m_user;
 
 		public MainWindow()
@@ -669,16 +670,7 @@ namespace CS451_Milestone3
 								string state = reader.GetString(4);
 								string zipcode = reader.GetString(5);
 								int reviewCount = reader.GetInt32(6);
-								// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
-								int numCheckins;
-								try
-								{
-									numCheckins = reader.GetInt32(7);
-								}
-								catch
-								{
-									numCheckins = 0;
-								}
+								int numCheckins = reader.GetInt32(7);
 								searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount});
 							}
 						}
@@ -717,16 +709,7 @@ namespace CS451_Milestone3
 							string state = reader.GetString(4);
 							string zipcode = reader.GetString(5);
 							int reviewCount = reader.GetInt32(6);
-							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
-							int numCheckins;
-							try
-							{
-								numCheckins = reader.GetInt32(7);
-							}
-							catch
-							{
-								numCheckins = 0;
-							}
+							int numCheckins = reader.GetInt32(7);
 							string open = reader.GetString(8);
 							string close = reader.GetString(9);
 							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
@@ -768,16 +751,7 @@ namespace CS451_Milestone3
 							string state = reader.GetString(4);
 							string zipcode = reader.GetString(5);
 							int reviewCount = reader.GetInt32(6);
-							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
-							int numCheckins;
-							try
-							{
-								numCheckins = reader.GetInt32(7);
-							}
-							catch
-							{
-								numCheckins = 0;
-							}
+							int numCheckins = reader.GetInt32(7);
 							string open = reader.GetString(8);
 							string close = reader.GetString(9);
 							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
@@ -816,16 +790,7 @@ namespace CS451_Milestone3
 							string state = reader.GetString(4);
 							string zipcode = reader.GetString(5);
 							int reviewCount = reader.GetInt32(6);
-							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
-							int numCheckins;
-							try
-							{
-								numCheckins = reader.GetInt32(7);
-							}
-							catch
-							{
-								numCheckins = 0;
-							}
+							int numCheckins = reader.GetInt32(7);
 							string open = reader.GetString(8);
 							string close = reader.GetString(9);
 							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
@@ -860,16 +825,7 @@ namespace CS451_Milestone3
 							string state = reader.GetString(4);
 							string zipcode = reader.GetString(5);
 							int reviewCount = reader.GetInt32(6);
-							// TODO: NEED TO MAKE SURE DB DOESN'T HAVE NULL VALUES FOR THIS COLUMN
-							int numCheckins;
-							try
-							{
-								numCheckins = reader.GetInt32(7);
-							}
-							catch
-							{
-								numCheckins = 0;
-							}
+							int numCheckins = reader.GetInt32(7);
 							string open = reader.GetString(8);
 							string close = reader.GetString(9);
 							searchResultsdataGrid.Items.Add(new Business() { bid = bid, name = name, address = address, city = city, state = state, zipcode = zipcode, totalCheckins = numCheckins, numTips = reviewCount, open = open, close = close });
@@ -1080,7 +1036,6 @@ namespace CS451_Milestone3
 		/// </summary>
 		private void showCheckinsButton_Click(object sender, RoutedEventArgs e)
 		{
-			// TODO
 			CategoryStats win = new CategoryStats(connectString, m_biz);
 			win.Show();
 		}
