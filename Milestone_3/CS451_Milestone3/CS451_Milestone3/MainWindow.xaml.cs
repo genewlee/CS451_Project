@@ -697,7 +697,7 @@ namespace CS451_Milestone3
 				using (var cmd = new NpgsqlCommand())
 				{
 					cmd.Connection = conn;
-					cmd.CommandText = buildSearchQueryWithCategories(String.Format(" AND H.day='{0}'", dayOfWeekComboBox.SelectedItem));
+					cmd.CommandText = buildSearchQueryWithCategories(String.Format(" AND H.day='{0}' ", dayOfWeekComboBox.SelectedItem));
 					using (var reader = cmd.ExecuteReader())
 					{
 						while (reader.Read())
@@ -738,7 +738,7 @@ namespace CS451_Milestone3
 				{
 					cmd.Connection = conn;
 					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' 
-																																					AND H.open<='{1}' AND H.close>'{2}'",
+																																					AND H.open<='{1}' AND H.close>'{2}' ",
 																																					dayOfWeekComboBox.SelectedItem, timeFromComboBox.SelectedItem, timeFromComboBox.SelectedItem));
 					using (var reader = cmd.ExecuteReader())
 					{
@@ -777,7 +777,7 @@ namespace CS451_Milestone3
 					cmd.Connection = conn;
 					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' 
 																																					AND H.open<='{1}' AND '{2}'<H.close
-																																					AND H.open<='{3}' AND '{4}'<=H.close", 
+																																					AND H.open<='{3}' AND '{4}'<=H.close ", 
 																																					dayOfWeekComboBox.SelectedItem, timeFromComboBox.SelectedItem, timeFromComboBox.SelectedItem, timeToComboBox.SelectedItem, timeToComboBox.SelectedItem));
 					using (var reader = cmd.ExecuteReader())
 					{
@@ -813,7 +813,7 @@ namespace CS451_Milestone3
 				using (var cmd = new NpgsqlCommand())
 				{
 					cmd.Connection = conn;
-					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' AND H.open='00:00' AND '00:00'=H.close", dayOfWeekComboBox.SelectedItem));
+					cmd.CommandText = buildSearchQueryWithCategories(String.Format(@" AND H.day='{0}' AND H.open='00:00' AND '00:00'=H.close ", dayOfWeekComboBox.SelectedItem));
 					using (var reader = cmd.ExecuteReader())
 					{
 						while (reader.Read())
@@ -848,13 +848,13 @@ namespace CS451_Milestone3
 
 			if (queryToAppend == "") // There is no filtering of date/time
 			{
-				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins 
+				query.Append(String.Format(@"(SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins 
 																					FROM business as B, category as C
 																					WHERE B.bid = C.bid AND state='{0}' ", m_loc.state));
 			}
 			else
 			{
-				query.Append(String.Format(@"SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins,
+				query.Append(String.Format(@"(SELECT DISTINCT(B.bid), B.name, B.full_address, B.city, B.state, B.zipcode, B.review_count, B.numcheckins,
 																					H.open, H.close
 																					FROM business as B, category as C, hours H
 																					WHERE B.bid = C.bid AND B.bid = H.bid
@@ -867,18 +867,35 @@ namespace CS451_Milestone3
 			if (m_loc.zipcode != null)
 				query.Append(String.Format("AND zipcode='{0}' ", m_loc.zipcode));
 
+			query.Append(queryToAppend); // if nothing is passed in, empty string by default
+			string init_query = query.ToString();
+
+			if (queryToAppend == "")
+				query.Insert(0, "SELECT DISTINCT(Temp0.bid), Temp0.name, Temp0.full_address, Temp0.city, Temp0.state, Temp0.zipcode, Temp0.review_count, Temp0.numcheckins FROM ");
+			else
+				query.Insert(0, "SELECT DISTINCT(Temp0.bid), Temp0.name, Temp0.full_address, Temp0.city, Temp0.state, Temp0.zipcode, Temp0.review_count, Temp0.numcheckins, Temp0.open, Temp0.close FROM ");
+
 			// Get the categories selected to filter by category and append to query
 			ItemCollection cats = selectedCategoriesListBox.Items;
 			if (cats.Count > 0)
 			{
-				query.Append("AND (");
-				foreach (var cat in cats)
-					query.Append(String.Format("C.name='{0}' OR ", cat.ToString()));
-				query.Remove(query.Length - 3, 3); // remove the last OR
-				query.Append(")");
+				for (int i = 0; i < cats.Count; i++)
+				{
+					query.Append(String.Format("AND C.name='{0}')", cats[i].ToString()));
+					query.Append(String.Format("AS Temp{0}", i));
+					if (cats.Count > 1)
+					{
+						if (i > 0)
+							query.Append(String.Format(" ON Temp{0}.name=Temp{1}.name", i - 1, i));
+						if (i != cats.Count - 1)
+							query.Append(String.Format(" JOIN {0}", init_query));
+					}
+				}					
 			}
-
-			query.Append(queryToAppend); // if nothing is passed in, empty string by default
+			else
+			{
+				query.Append(") AS Temp0;");
+			}
 
 			return query.ToString();
 		}
